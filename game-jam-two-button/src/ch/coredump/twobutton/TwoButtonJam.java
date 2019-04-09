@@ -8,16 +8,21 @@ import processing.core.PApplet;
 import processing.event.KeyEvent;
 
 public class TwoButtonJam extends PApplet {
+	// constants
+	public static final char KEY_1 = '1';
+	public static final char KEY_2 = '2';
 
 	GameStateManager manager;
 
 	public static void main(String[] args) {
-		PApplet.main(TwoButtonJam.class);
+		String[] newArgs = append(args, "--location=-1900,400");
+		newArgs = append(newArgs, TwoButtonJam.class.getName());
+		PApplet.main(newArgs);
 	}
 
 	@Override
 	public void settings() {
-		size(600, 600);
+		size(800, 600);
 	}
 
 	@Override

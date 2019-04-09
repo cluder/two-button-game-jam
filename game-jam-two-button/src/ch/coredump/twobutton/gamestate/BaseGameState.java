@@ -64,6 +64,9 @@ public abstract class BaseGameState {
 		lastFrameTime = currentTime;
 	}
 
+	/**
+	 * @param tpf time since last frame in ms.
+	 */
 	protected abstract void doUpdate(long tpf);
 
 	public void mousePressed(MouseEvent event) {

@@ -1,44 +1,48 @@
 package ch.coredump.twobutton.gamestate;
 
-import static processing.core.PConstants.LEFT;
-import static processing.core.PConstants.RIGHT;
-
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
-import ch.coredump.twobutton.Ball;
+import ch.coredump.twobutton.LevelManager;
+import ch.coredump.twobutton.TwoButtonJam;
+import ch.coredump.twobutton.entity.Vehicle;
 import processing.core.PApplet;
-import processing.core.PImage;
 import processing.event.KeyEvent;
 
 /**
  * 
  */
 public class GSGame extends BaseGameState {
-	HashMap<Integer, Long> pressedKeys = new HashMap<>();
+	// maps of pressed keys and pressed time in ms
+	HashMap<Character, Long> pressedKeys = new HashMap<>();
+	final int timeToSwitchToMenu = 1000;
 
 	long score;
 	long maxScore;
 	int scoreHeight = 50;
 
-	Ball ball = new Ball();
-	PImage tableInfo;
+	final float floorHeight = p.height * 0.6f;
+
+	Vehicle vehicle;
+	boolean vehicleOnFloor = false;
+
+	LevelManager levelManager;
 
 	public GSGame(PApplet p, GameStateManager manager) {
 		super(p, manager, GameState.GAME);
+
+		vehicle = new Vehicle(p);
+		levelManager = new LevelManager(p, floorHeight);
 	}
 
 	@Override
 	public void init() {
-		// load assets
-		tableInfo = p.loadImage("resources/table.png");
 
 	}
 
 	@Override
 	public void onActivate() {
 		reset();
-		tableInfo = p.loadImage("resources/table.png");
 	}
 
 	public long getMaxScore() {
@@ -48,24 +52,44 @@ public class GSGame extends BaseGameState {
 	private void reset() {
 		pressedKeys.clear();
 		score = 0;
-		ball.reset(p.width, p.height);
+		vehicle.reset(p.width, p.height);
+
+		levelManager.init();
 	}
 
 	@Override
 	protected void doUpdate(long tpf) {
 		updateMaxScore();
 
-		updateKeyTime(tpf, LEFT);
-		updateKeyTime(tpf, RIGHT);
+		updateKeyTime(tpf, TwoButtonJam.KEY_1);
+		updateKeyTime(tpf, TwoButtonJam.KEY_2);
 
 		// press left & right key to return to menu / restart
-		final int timeToSwitchToMenu = 1000;
-		if (isPressed(LEFT, timeToSwitchToMenu) && isPressed(RIGHT, timeToSwitchToMenu)) {
+		if (isPressed(TwoButtonJam.KEY_1, timeToSwitchToMenu) && isPressed(TwoButtonJam.KEY_2, timeToSwitchToMenu)) {
 			manager.setActive(GameState.MENU);
 		}
 
-		// update ball
-		ball.update(tpf);
+		// jump
+		if (isPressed(TwoButtonJam.KEY_1, 1)) {
+			// only jump, if vehicle is on the floor
+			if (vehicleOnFloor) {
+				vehicle.ySpeed = -1.5f;
+			}
+		}
+
+		if (isPressed(TwoButtonJam.KEY_2, 1)) {
+			levelManager.levelStarted = true;
+		}
+
+		// update entities
+		levelManager.update(tpf);
+
+		if (!levelManager.levelFailed) {
+			vehicle.update(tpf);
+		}
+
+		// update score
+		score = levelManager.levelTime / 100;
 
 		checkCollision();
 
@@ -74,90 +98,74 @@ public class GSGame extends BaseGameState {
 
 	private void checkCollision() {
 
-		int x = (int) ball.getX();
-		int y = (int) ball.getY();
+		// check collision vs obstacles
+		levelManager.checkCollision(vehicle);
 
-		// testing
-//		x = p.mouseX;
-//		y = p.mouseY;
-
-		final int pInfo = tableInfo.get(x, y);
-
-//		int a = (pInfo >> 24) & 255;
-//		int r = (pInfo >> 16) & 255;
-//		int g = (pInfo >> 8) & 255;
-
-		// blue value
-		int b = pInfo & 255;
-
-		if (b == 255) {
-			return;
+		// floor check
+		if (vehicle.y + vehicle.height > floorHeight) {
+			vehicle.y = floorHeight - 1 - vehicle.height;
+			vehicleOnFloor = true;
+		} else {
+			vehicleOnFloor = false;
 		}
-		// convert grey value to degrees (0-360)
-		final float degree = 360.0f / 255.0f * b;
-		// convert to sin/cos
-		final float rad = PApplet.radians(degree);
-		final float sin = PApplet.sin(rad);
-		final float cos = PApplet.cos(rad);
-
-		ball.xSpeed += sin * 0.3f;
-		ball.ySpeed += cos * 0.3f;
-		System.out.println(String.format("grey:%s, degree:%s, sin:%s, cos:%s", b, degree, sin, cos));
-
-		if (ball.getY() >= p.height - 20) {
-			ball.setY(p.height - 30);
-//			ball.setySpeed(ball.getySpeed() * -1.1f);
-			ball.ySpeed = 0;
-		}
-		if (ball.getY() <= 30) {
-			ball.setY(50);
-			ball.ySpeed = 0;
-		}
-		if (ball.getX() <= 30) {
-			ball.setX(50);
-			ball.xSpeed = 0;
-		}
-		if (ball.getX() >= p.width - 20) {
-			ball.setX(p.width - 30);
-			ball.xSpeed = 0;
-		}
-
-//		System.out.println(ball.ySpeed);
 	}
 
+	@SuppressWarnings("unused")
+	private void debugPrint() {
+
+	}
+
+	/**
+	 * Draw scene.
+	 */
 	@Override
 	protected void doRender() {
 		p.background(0);
 
-		drawTable();
-
-		drawBall();
-
-		drawPaddles();
-
+		drawOverlay();
+		drawVehicle();
+		drawFloor();
 		drawScore();
+		levelManager.draw(p);
 	}
 
-	private void drawBall() {
-		p.noStroke();
+	private void drawVehicle() {
+		vehicle.draw(p);
+	}
+
+	private void drawFloor() {
+		p.rectMode(PApplet.CORNERS);
 		p.fill(155);
-
-		p.circle(ball.getX(), ball.getY(), 20);
+		p.rect(30, floorHeight, p.width - 30, floorHeight + 50);
 	}
 
-	private void drawPaddles() {
-
-	}
-
-	private void drawTable() {
-		p.image(tableInfo, 0, 0);
-
+	private void drawOverlay() {
+		// frame surrounding the playfield
 		p.rectMode(PApplet.CORNERS);
 		p.noFill();
 		p.strokeJoin(PApplet.ROUND);
 		p.strokeWeight(1);
 		p.stroke(255, 255, 0, 150);
 		p.rect(20, scoreHeight + 5, p.width - 20, p.height - 20);
+
+		// info message to start level
+		if (!levelManager.levelStarted) {
+			p.textSize(15);
+			p.textAlign(PApplet.LEFT);
+			p.text("press '" + TwoButtonJam.KEY_2 + "' to start", p.width * 0.1f, p.height * 0.45f);
+		}
+
+		if (levelManager.levelFinished || levelManager.levelFailed) {
+			String info = "Level finished!";
+			if (levelManager.levelFailed) {
+				info = "Level failed!";
+			}
+			p.textSize(15);
+			p.textAlign(PApplet.LEFT);
+			p.text(info, p.width * 0.5f, p.height * 0.45f);
+			p.text("press '" + TwoButtonJam.KEY_1 + "' and '" + TwoButtonJam.KEY_2 + "' (" + timeToSwitchToMenu / 1000
+					+ "sec) to restart", p.width * 0.5f, p.height * 0.48f);
+		}
 
 	}
 
@@ -176,7 +184,7 @@ public class GSGame extends BaseGameState {
 		p.fill(255, 200, 0, 255);
 
 		p.textAlign(PApplet.LEFT, PApplet.CENTER);
-		p.text("SCORE", padding, padding);
+		p.text("Distance (best:" + maxScore + ")", padding, padding);
 		p.textAlign(PApplet.RIGHT, PApplet.CENTER);
 		p.text(df.format(score), p.width - padding, padding);
 	}
@@ -187,15 +195,10 @@ public class GSGame extends BaseGameState {
 		}
 	}
 
-	private void debugPrint() {
-		final Long left = pressedKeys.get(LEFT);
-		System.out.println("left:" + left);
-
-		final Long right = pressedKeys.get(RIGHT);
-		System.out.println("right:" + right);
-	}
-
-	private boolean isPressed(int key, int ms) {
+	/**
+	 * checks if the given key is pressed.
+	 */
+	private boolean isPressed(char key, int ms) {
 		final Long keyTime = pressedKeys.get(key);
 		if (keyTime == null) {
 			return false;
@@ -203,7 +206,10 @@ public class GSGame extends BaseGameState {
 		return keyTime > ms;
 	}
 
-	private void updateKeyTime(long tpf, int key) {
+	/**
+	 * record how long a key is pressed
+	 */
+	private void updateKeyTime(long tpf, char key) {
 		Long leftKey = pressedKeys.get(key);
 		if (leftKey != null) {
 			pressedKeys.put(key, leftKey += tpf);
@@ -212,16 +218,17 @@ public class GSGame extends BaseGameState {
 
 	@Override
 	public void keyPressed(KeyEvent event) {
-		final int keyCode = event.getKeyCode();
-		if (pressedKeys.containsKey(keyCode) == false) {
-			pressedKeys.put(keyCode, 0L);
+		final char key = event.getKey();
+		if (pressedKeys.containsKey(key) == false) {
+			pressedKeys.put(key, 0L);
 		}
 
 	}
 
 	@Override
 	public void keyReleased(KeyEvent event) {
-		final int keyCode = event.getKeyCode();
-		pressedKeys.remove(keyCode);
+		final char key = event.getKey();
+		pressedKeys.remove(key);
 	}
+
 }

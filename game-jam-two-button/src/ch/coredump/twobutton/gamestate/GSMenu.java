@@ -6,10 +6,11 @@ import processing.sound.SoundFile;
 public class GSMenu extends BaseGameState {
 	long menuTime = 0;
 	String title = "TWO BUTTON JAM";
-	String info1 = "Press left and right arrow keys to use paddles.";
-	String info2 = "Press left or right arrow key to start";
+	String info1 = "Press '1' to jump, '2' to fire.";
+	String info2 = "Press '1' or '2' to start";
 
 	SoundFile music;
+	int waitTime = 1000;
 
 	public GSMenu(PApplet p, GameStateManager manager) {
 		super(p, manager, GameState.MENU);
@@ -25,6 +26,7 @@ public class GSMenu extends BaseGameState {
 	public void onActivate() {
 		// when coming from the game, we wait 5 seconds until we allow switching to the
 		// game again
+		waitTime = 1000;
 		menuTime = 0;
 	}
 
@@ -48,7 +50,7 @@ public class GSMenu extends BaseGameState {
 	}
 
 	private boolean switchAllowed() {
-		return menuTime > 3000;
+		return menuTime > waitTime;
 	}
 
 	@Override
@@ -56,8 +58,8 @@ public class GSMenu extends BaseGameState {
 		menuTime += tpf;
 
 		if (switchAllowed() && //
-				((p.keyPressed && p.keyCode == PApplet.LEFT) || //
-						(p.keyPressed && p.keyCode == PApplet.RIGHT))) {
+				((p.keyPressed && p.key == '1') || //
+						(p.keyPressed && p.key == '2'))) {
 			manager.setActive(GameState.GAME);
 			System.out.println("switching to game with menuTime:" + menuTime);
 		}
