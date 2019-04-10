@@ -1,15 +1,19 @@
 package ch.coredump.twobutton.gamestate;
 
+import ch.coredump.twobutton.entity.SoundManager;
+import ch.coredump.twobutton.util.Consts;
 import processing.core.PApplet;
-import processing.sound.SoundFile;
 
 public class GSMenu extends BaseGameState {
 	long menuTime = 0;
 	String title = "TWO BUTTON JAM";
+	String title1 = "";
 	String info1 = "Press '1' to jump, '2' to fire.";
 	String info2 = "Press '2' to start";
+	String credits = "Contains music ©2019 Joshua McLean (mrjoshuamclean.com)\r\n"
+			+ "Licensed under Creative Commons Attribution-ShareAlike 4.0 International\r\n\n"
+			+ "Contains free to use soundeffects from https://www.zapsplat.com\n" + "Font 'Press start' by codeman38 ";
 
-	SoundFile music;
 	int waitTime = 1000;
 
 	public GSMenu(PApplet p, GameStateManager manager) {
@@ -19,8 +23,6 @@ public class GSMenu extends BaseGameState {
 	@Override
 	public void init() {
 		super.init();
-
-//		music = new SoundFile(p, "resources/two-buttons.mp3");
 	}
 
 	public void onActivate() {
@@ -28,25 +30,42 @@ public class GSMenu extends BaseGameState {
 		// game again
 		waitTime = 1000;
 		menuTime = 0;
+		SoundManager.get().playMenuMusic();
 	}
 
 	@Override
 	protected void doRender() {
 		p.background(0);
-
 		p.fill(255);
-		// title
-		p.textSize(45);
 		p.textAlign(PApplet.CENTER, PApplet.CENTER);
-		p.text(title, p.width / 2, p.height * .2f);
+
+		float y = p.height * .25f;
+		// title
+		p.textSize(Consts.DEFAULT_FONT_SIZE - 2);
+		p.text("A game prototype for the ", p.width / 2, y);
+
+		y = p.height * .32f;
+		p.textSize(Consts.DEFAULT_FONT_SIZE + 7);
+		p.text("8 Bits to Infinity ", p.width / 2, y);
+
+		y = p.height * .4f;
+		p.textSize(Consts.DEFAULT_FONT_SIZE + 25);
+		p.text(title, p.width / 2, y);
 
 		// info
-		p.textSize(20);
-		p.textAlign(PApplet.CENTER, PApplet.CENTER);
-		p.text(info1, p.width / 2, p.height * .5f);
+		y = p.height * 0.60f;
+		p.textSize(Consts.DEFAULT_FONT_SIZE);
+		p.text(info1, p.width / 2, y);
 		if (switchAllowed()) {
-			p.text(info2, p.width / 2, p.height * .6f);
+			y += p.height * .05f;
+			p.text(info2, p.width / 2, y);
 		}
+
+		// credits
+		y = p.height * 0.9f;
+		p.textSize(Consts.DEFAULT_FONT_SIZE - 7);
+		p.text(credits, p.width / 2, y);
+
 	}
 
 	private boolean switchAllowed() {

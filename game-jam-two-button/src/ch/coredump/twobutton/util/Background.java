@@ -1,4 +1,4 @@
-package ch.coredump.twobutton;
+package ch.coredump.twobutton.util;
 
 import java.util.ArrayList;
 import java.util.List;

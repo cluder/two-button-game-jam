@@ -5,6 +5,8 @@
 	<classpathentry kind="src" path="lib"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="lib" path="lib/core.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/processing-sound"/>
+	<classpathentry kind="lib" path="lib/sound/javamp3-1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/sound/jsyn-20190315.jar"/>
+	<classpathentry kind="lib" path="lib/sound/sound.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

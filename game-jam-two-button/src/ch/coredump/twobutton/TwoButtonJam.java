@@ -1,16 +1,15 @@
 package ch.coredump.twobutton;
 
+import ch.coredump.twobutton.entity.SoundManager;
 import ch.coredump.twobutton.gamestate.GSGame;
 import ch.coredump.twobutton.gamestate.GSMenu;
 import ch.coredump.twobutton.gamestate.GameState;
 import ch.coredump.twobutton.gamestate.GameStateManager;
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.event.KeyEvent;
 
 public class TwoButtonJam extends PApplet {
-	// constants
-	public static final char KEY_1 = '1';
-	public static final char KEY_2 = '2';
 
 	GameStateManager manager;
 
@@ -27,6 +26,8 @@ public class TwoButtonJam extends PApplet {
 
 	@Override
 	public void setup() {
+		SoundManager.init(this);
+
 		frameRate(30);
 
 		manager = new GameStateManager();
@@ -35,6 +36,8 @@ public class TwoButtonJam extends PApplet {
 		manager.addState(new GSGame(this, manager));
 
 		manager.setActive(GameState.MENU);
+		final PFont font = createFont("resources/prstartk.ttf", 10);
+		textFont(font);
 	}
 
 	@Override

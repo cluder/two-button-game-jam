@@ -1,19 +1,25 @@
 package ch.coredump.twobutton.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ch.coredump.twobutton.entity.SoundManager.Effect;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
 public class Vehicle extends BaseEntity {
-
 	// height of the vehicle
 	public int height;
 	public int length;
 
 	// parts with this alpha value, will be checked for collision
 	public final int collisionAlpha = 250;
-
 	public PGraphics img;
+
+	long fireCoolDown = 0;
+
+	public List<Projectile> projectiles = new ArrayList<>();
 
 	public Vehicle(PApplet p) {
 		super(p);
@@ -52,10 +58,14 @@ public class Vehicle extends BaseEntity {
 		y = height;
 		xSpeed = 0;
 		ySpeed = 0;
+		fireCoolDown = 0;
+		projectiles.clear();
 	}
 
 	@Override
 	public void update(long tpf) {
+		fireCoolDown -= tpf;
+
 		// test values
 		gravity = 1;
 		maxSepeed = 5;
@@ -74,6 +84,9 @@ public class Vehicle extends BaseEntity {
 		y += ySpeed;
 		x += xSpeed;
 
+		for (Projectile pr : projectiles) {
+			pr.update(tpf);
+		}
 	}
 
 	@Override
@@ -83,5 +96,20 @@ public class Vehicle extends BaseEntity {
 
 	public void draw(PApplet p) {
 		p.image(img, x, y);
+		for (Projectile pr : projectiles) {
+			pr.draw(p);
+		}
+	}
+
+	public void fire() {
+		System.out.println(fireCoolDown);
+		if (fireCoolDown > 0) {
+			return;
+		}
+		fireCoolDown = 2000;
+		SoundManager.get().play(Effect.SHOT);
+
+		projectiles.add(new Projectile(p, x + length, y + height / 2));
+		projectiles.removeIf(x -> x.dead);
 	}
 }

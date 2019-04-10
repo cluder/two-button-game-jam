@@ -1,10 +1,12 @@
-package ch.coredump.twobutton;
+package ch.coredump.twobutton.util;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import ch.coredump.twobutton.entity.Obstacle;
+import ch.coredump.twobutton.entity.Projectile;
+import ch.coredump.twobutton.entity.SoundManager;
 import ch.coredump.twobutton.entity.Vehicle;
 import processing.core.PApplet;
 
@@ -77,7 +79,7 @@ public class LevelManager {
 		for (Obstacle o : obstacles) {
 			if (levelTime > o.spawnTime) {
 				o.update(tpf);
-				if (o.x < 0) {
+				if (o.x < 50) {
 					o.dead = true;
 				}
 			}
@@ -98,9 +100,9 @@ public class LevelManager {
 	}
 
 	/**
-	 * Check if player collides with obstacles.
+	 * Check if player and projectiles collides with obstacles.
 	 */
-	public void checkCollision(Vehicle v) {
+	public boolean checkCollision(Vehicle v) {
 		for (int i = 0; i < v.img.width; i++) {
 			for (int j = 0; j < v.img.height; j++) {
 
@@ -112,13 +114,30 @@ public class LevelManager {
 				}
 
 				for (Obstacle o : obstacles) {
+					if (o.dead) {
+						continue;
+					}
+					// player vs obstacle
 					if (o.collidesWith((int) (i + v.x), (int) (j + v.y))) {
 						levelFailed = true;
-						return;
+						return true;
+					}
+
+					// projectole vs obstacle
+					for (Projectile pr : v.projectiles) {
+						if (pr.dead) {
+							continue;
+						}
+						if (o.collidesWith((int) pr.x, (int) pr.y)) {
+							o.dead = true;
+							pr.dead = true;
+							SoundManager.get().play(SoundManager.Effect.IMPACT);
+						}
 					}
 				}
 			}
 		}
+		return false;
 	}
 
 	public boolean isRunning() {

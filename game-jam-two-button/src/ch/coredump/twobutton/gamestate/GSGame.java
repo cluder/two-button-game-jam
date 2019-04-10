@@ -3,10 +3,11 @@ package ch.coredump.twobutton.gamestate;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
-import ch.coredump.twobutton.Background;
-import ch.coredump.twobutton.LevelManager;
-import ch.coredump.twobutton.TwoButtonJam;
+import ch.coredump.twobutton.entity.SoundManager;
 import ch.coredump.twobutton.entity.Vehicle;
+import ch.coredump.twobutton.util.Background;
+import ch.coredump.twobutton.util.Consts;
+import ch.coredump.twobutton.util.LevelManager;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 
@@ -35,7 +36,7 @@ public class GSGame extends BaseGameState {
 		super(p, manager, GameState.GAME);
 
 		// TODO correct padding (50)
-		bg = new Background(p, 50, 100, p.width - 50, (int) floorHeight - 70, movementSpeed);
+		bg = new Background(p, 50, 70, p.width - 50, (int) floorHeight - 70, movementSpeed);
 		vehicle = new Vehicle(p);
 		levelManager = new LevelManager(p, floorHeight);
 	}
@@ -48,6 +49,7 @@ public class GSGame extends BaseGameState {
 	@Override
 	public void onActivate() {
 		reset();
+		SoundManager.get().playGameMusic();
 	}
 
 	public long getMaxScore() {
@@ -67,23 +69,23 @@ public class GSGame extends BaseGameState {
 	protected void doUpdate(long tpf) {
 		updateMaxScore();
 
-		updateKeyTime(tpf, TwoButtonJam.KEY_1);
-		updateKeyTime(tpf, TwoButtonJam.KEY_2);
+		updateKeyTime(tpf, Consts.KEY_1);
+		updateKeyTime(tpf, Consts.KEY_2);
 
 		// press left & right key to return to menu / restart
-		if (isPressed(TwoButtonJam.KEY_1, timeToSwitchToMenu) && isPressed(TwoButtonJam.KEY_2, timeToSwitchToMenu)) {
+		if (isPressed(Consts.KEY_1, timeToSwitchToMenu) && isPressed(Consts.KEY_2, timeToSwitchToMenu)) {
 			manager.setActive(GameState.MENU);
 		}
 
 		// jump
-		if (isPressed(TwoButtonJam.KEY_1, 1)) {
+		if (isPressed(Consts.KEY_1, 1)) {
 			// only jump, if vehicle is on the floor
 			if (vehicleOnFloor) {
 				vehicle.ySpeed = -1.5f;
 			}
 		}
 
-		if (isPressed(TwoButtonJam.KEY_2, 1)) {
+		if (isPressed(Consts.KEY_2, 1)) {
 			levelManager.levelStarted = true;
 		}
 
@@ -106,7 +108,10 @@ public class GSGame extends BaseGameState {
 	private void checkCollision() {
 
 		// check collision vs obstacles
-		levelManager.checkCollision(vehicle);
+		boolean collision = levelManager.checkCollision(vehicle);
+		if (collision) {
+			SoundManager.get().stop();
+		}
 
 		// floor check
 		if (vehicle.y + vehicle.height > floorHeight) {
@@ -158,11 +163,11 @@ public class GSGame extends BaseGameState {
 
 		// info message to start level
 		if (!levelManager.levelStarted) {
-			p.textSize(15);
+			p.textAlign(PApplet.CENTER);
+			p.textSize(Consts.DEFAULT_FONT_SIZE);
 			p.noFill();
 			p.stroke(255, 255, 0, 255);
-			p.textAlign(PApplet.LEFT);
-			p.text("press '" + TwoButtonJam.KEY_2 + "' to start level", p.width * 0.1f, p.height * 0.45f);
+			p.text("press '" + Consts.KEY_2 + "' to start level", p.width * .5f, p.height * 0.35f);
 		}
 
 		if (levelManager.levelFinished || levelManager.levelFailed) {
@@ -170,21 +175,22 @@ public class GSGame extends BaseGameState {
 			if (levelManager.levelFailed) {
 				info = "Level failed!";
 			}
-			p.textSize(15);
-			p.textAlign(PApplet.LEFT);
-			p.text(info, p.width * 0.5f, p.height * 0.45f);
-			p.text("Hold '" + TwoButtonJam.KEY_1 + "' and '" + TwoButtonJam.KEY_2 + "' to restart", p.width * 0.5f,
-					p.height * 0.48f);
+			p.textAlign(PApplet.CENTER);
+			p.textSize(Consts.DEFAULT_FONT_SIZE);
+			p.text(info, p.width * 0.5f, p.height * 0.2f);
+			p.text("Hold '" + Consts.KEY_1 + "' and '" + Consts.KEY_2 + "' to restart", p.width * 0.5f,
+					p.height * 0.25f);
 		}
 
 		// help text
-		p.textSize(15);
+		p.textSize(Consts.DEFAULT_FONT_SIZE);
 		p.textAlign(PApplet.LEFT);
 
-		float yPos = p.height * 0.7f;
-		p.text("Controls:", p.width * 0.05f, yPos += 20);
-		p.text("Jump: '" + TwoButtonJam.KEY_1 + "'", p.width * 0.05f, yPos += 20);
-		p.text("Fire: '" + TwoButtonJam.KEY_2 + "'", p.width * 0.05f, yPos += 20);
+		float yPos = p.height * 0.73f;
+		p.text("Controls:", p.width * 0.05f, yPos);
+		p.text("Jump: '" + Consts.KEY_1 + "'", p.width * 0.25f, yPos);
+		yPos += 20;
+		p.text("Fire: '" + Consts.KEY_2 + "'", p.width * 0.25f, yPos);
 
 	}
 
@@ -199,7 +205,7 @@ public class GSGame extends BaseGameState {
 		p.stroke(255, 255, 0);
 		p.line(padding, 50, p.width - padding, 50);
 
-		p.textSize(30);
+		p.textSize(Consts.SCORE_FONT_SIZE);
 		p.fill(255, 200, 0, 255);
 
 		p.textAlign(PApplet.LEFT, PApplet.CENTER);
@@ -240,6 +246,10 @@ public class GSGame extends BaseGameState {
 		final char key = event.getKey();
 		if (pressedKeys.containsKey(key) == false) {
 			pressedKeys.put(key, 0L);
+		}
+
+		if (event.getKey() == Consts.KEY_2 && levelManager.isRunning()) {
+			vehicle.fire();
 		}
 
 	}
