@@ -3,6 +3,7 @@ package ch.coredump.twobutton.gamestate;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
+import ch.coredump.twobutton.Background;
 import ch.coredump.twobutton.LevelManager;
 import ch.coredump.twobutton.TwoButtonJam;
 import ch.coredump.twobutton.entity.Vehicle;
@@ -23,6 +24,8 @@ public class GSGame extends BaseGameState {
 
 	final float floorHeight = p.height * 0.6f;
 
+	Background bg;
+	float movementSpeed = 3;
 	Vehicle vehicle;
 	boolean vehicleOnFloor = false;
 
@@ -31,6 +34,8 @@ public class GSGame extends BaseGameState {
 	public GSGame(PApplet p, GameStateManager manager) {
 		super(p, manager, GameState.GAME);
 
+		// TODO correct padding (50)
+		bg = new Background(p, 50, 100, p.width - 50, (int) floorHeight - 70, movementSpeed);
 		vehicle = new Vehicle(p);
 		levelManager = new LevelManager(p, floorHeight);
 	}
@@ -52,9 +57,10 @@ public class GSGame extends BaseGameState {
 	private void reset() {
 		pressedKeys.clear();
 		score = 0;
-		vehicle.reset(p.width, p.height);
+		vehicle.reset(p.width, (int) floorHeight);
 
-		levelManager.init();
+		levelManager.init(movementSpeed);
+		bg.init(50, 100, p.width - 50, (int) floorHeight - 70);
 	}
 
 	@Override
@@ -84,8 +90,9 @@ public class GSGame extends BaseGameState {
 		// update entities
 		levelManager.update(tpf);
 
-		if (!levelManager.levelFailed) {
+		if (levelManager.isRunning()) {
 			vehicle.update(tpf);
+			bg.update(tpf);
 		}
 
 		// update score
@@ -121,6 +128,7 @@ public class GSGame extends BaseGameState {
 	@Override
 	protected void doRender() {
 		p.background(0);
+		bg.draw();
 
 		drawOverlay();
 		drawVehicle();
@@ -151,8 +159,10 @@ public class GSGame extends BaseGameState {
 		// info message to start level
 		if (!levelManager.levelStarted) {
 			p.textSize(15);
+			p.noFill();
+			p.stroke(255, 255, 0, 255);
 			p.textAlign(PApplet.LEFT);
-			p.text("press '" + TwoButtonJam.KEY_2 + "' to start", p.width * 0.1f, p.height * 0.45f);
+			p.text("press '" + TwoButtonJam.KEY_2 + "' to start level", p.width * 0.1f, p.height * 0.45f);
 		}
 
 		if (levelManager.levelFinished || levelManager.levelFailed) {
@@ -163,9 +173,18 @@ public class GSGame extends BaseGameState {
 			p.textSize(15);
 			p.textAlign(PApplet.LEFT);
 			p.text(info, p.width * 0.5f, p.height * 0.45f);
-			p.text("press '" + TwoButtonJam.KEY_1 + "' and '" + TwoButtonJam.KEY_2 + "' (" + timeToSwitchToMenu / 1000
-					+ "sec) to restart", p.width * 0.5f, p.height * 0.48f);
+			p.text("Hold '" + TwoButtonJam.KEY_1 + "' and '" + TwoButtonJam.KEY_2 + "' to restart", p.width * 0.5f,
+					p.height * 0.48f);
 		}
+
+		// help text
+		p.textSize(15);
+		p.textAlign(PApplet.LEFT);
+
+		float yPos = p.height * 0.7f;
+		p.text("Controls:", p.width * 0.05f, yPos += 20);
+		p.text("Jump: '" + TwoButtonJam.KEY_1 + "'", p.width * 0.05f, yPos += 20);
+		p.text("Fire: '" + TwoButtonJam.KEY_2 + "'", p.width * 0.05f, yPos += 20);
 
 	}
 

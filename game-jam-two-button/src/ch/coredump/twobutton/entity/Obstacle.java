@@ -9,14 +9,14 @@ public class Obstacle extends BaseEntity {
 	public float height = 30;
 	final int width = 20;
 
-	public Obstacle(PApplet p, float x, float y, long spawnTime) {
+	public Obstacle(PApplet p, float x, float y, long spawnTime, float speed) {
 		super(p);
 		this.spawnTime = spawnTime;
 		this.x = x;
 		this.y = y - height; // place on floor
 
 		// constant speed right to left
-		this.xSpeed = -3;
+		this.xSpeed = -speed;
 
 	}
 

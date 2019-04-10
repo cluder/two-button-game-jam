@@ -7,7 +7,7 @@ public class GSMenu extends BaseGameState {
 	long menuTime = 0;
 	String title = "TWO BUTTON JAM";
 	String info1 = "Press '1' to jump, '2' to fire.";
-	String info2 = "Press '1' or '2' to start";
+	String info2 = "Press '2' to start";
 
 	SoundFile music;
 	int waitTime = 1000;
@@ -57,9 +57,7 @@ public class GSMenu extends BaseGameState {
 	protected void doUpdate(long tpf) {
 		menuTime += tpf;
 
-		if (switchAllowed() && //
-				((p.keyPressed && p.key == '1') || //
-						(p.keyPressed && p.key == '2'))) {
+		if (switchAllowed() && p.keyPressed && p.key == '2') {
 			manager.setActive(GameState.GAME);
 			System.out.println("switching to game with menuTime:" + menuTime);
 		}

@@ -27,7 +27,7 @@ public class LevelManager {
 		this.floorHeight = floorHeight;
 	}
 
-	public void init() {
+	public void init(float speed) {
 		levelStarted = false;
 		levelFinished = false;
 		levelFailed = false;
@@ -41,14 +41,13 @@ public class LevelManager {
 		float obstacleY = floorHeight;
 
 		{
-			final Obstacle o = new Obstacle(p, obstacleX, obstacleY, 3000);
+			final Obstacle o = new Obstacle(p, obstacleX, obstacleY, 3000, speed);
 			add(o);
 		}
 		{
-			final Obstacle o = new Obstacle(p, obstacleX, obstacleY, 8000);
+			final Obstacle o = new Obstacle(p, obstacleX, obstacleY, 8000, speed);
 			add(o);
 		}
-
 	}
 
 	private void add(Obstacle o) {
@@ -120,5 +119,9 @@ public class LevelManager {
 				}
 			}
 		}
+	}
+
+	public boolean isRunning() {
+		return levelStarted && levelFinished == false && levelFailed == false;
 	}
 }

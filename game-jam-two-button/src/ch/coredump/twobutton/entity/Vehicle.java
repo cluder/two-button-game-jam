@@ -49,7 +49,7 @@ public class Vehicle extends BaseEntity {
 
 	public void reset(int width, int height) {
 		x = width * .1f;
-		y = height / 2;
+		y = height;
 		xSpeed = 0;
 		ySpeed = 0;
 	}
@@ -73,6 +73,7 @@ public class Vehicle extends BaseEntity {
 
 		y += ySpeed;
 		x += xSpeed;
+
 	}
 
 	@Override
