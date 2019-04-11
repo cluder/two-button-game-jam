@@ -7,8 +7,8 @@ import processing.core.PApplet;
 
 public class Background {
 	class Point {
-		int x;
-		int y;
+		float x;
+		float y;
 	}
 
 	PApplet p;
@@ -19,13 +19,13 @@ public class Background {
 	List<Point> points = new ArrayList<>();
 	float pointSpeed;
 
-	public Background(PApplet p, int startX, int startY, int width, int height, float speed) {
+	public Background(PApplet p, int startX, int startY, int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.startX = startX;
 		this.startY = startY;
 		this.p = p;
-		pointSpeed = speed;
+		pointSpeed = Consts.MOVEMENT_SPEED / 2;
 		init(startX, startY, width, height);
 	}
 
@@ -42,7 +42,7 @@ public class Background {
 	public void update(long tpf) {
 
 		for (Point point : points) {
-			point.x -= pointSpeed;
+			point.x -= pointSpeed * tpf;
 			if (point.x < startX) {
 				point.x = width;
 			}
@@ -51,6 +51,7 @@ public class Background {
 
 	public void draw() {
 		for (Point point : points) {
+			p.stroke(255, 255, 0, 150);
 			p.point(point.x, point.y);
 		}
 	}

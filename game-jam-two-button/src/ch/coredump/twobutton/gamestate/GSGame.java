@@ -7,6 +7,7 @@ import ch.coredump.twobutton.entity.SoundManager;
 import ch.coredump.twobutton.entity.Vehicle;
 import ch.coredump.twobutton.util.Background;
 import ch.coredump.twobutton.util.Consts;
+import ch.coredump.twobutton.util.Debug;
 import ch.coredump.twobutton.util.LevelManager;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
@@ -26,7 +27,6 @@ public class GSGame extends BaseGameState {
 	final float floorHeight = p.height * 0.6f;
 
 	Background bg;
-	float movementSpeed = 3;
 	Vehicle vehicle;
 	boolean vehicleOnFloor = false;
 
@@ -35,8 +35,7 @@ public class GSGame extends BaseGameState {
 	public GSGame(PApplet p, GameStateManager manager) {
 		super(p, manager, GameState.GAME);
 
-		// TODO correct padding (50)
-		bg = new Background(p, 50, 70, p.width - 50, (int) floorHeight - 70, movementSpeed);
+		bg = new Background(p, 50, 70, p.width - 50, (int) floorHeight - 70);
 		vehicle = new Vehicle(p);
 		levelManager = new LevelManager(p, floorHeight);
 	}
@@ -49,7 +48,7 @@ public class GSGame extends BaseGameState {
 	@Override
 	public void onActivate() {
 		reset();
-		SoundManager.get().playGameMusic();
+		SoundManager.get().stop();
 	}
 
 	public long getMaxScore() {
@@ -61,8 +60,9 @@ public class GSGame extends BaseGameState {
 		score = 0;
 		vehicle.reset(p.width, (int) floorHeight);
 
-		levelManager.init(movementSpeed);
+		levelManager.init();
 		bg.init(50, 100, p.width - 50, (int) floorHeight - 70);
+		Debug.get().active = false;
 	}
 
 	@Override
@@ -73,20 +73,22 @@ public class GSGame extends BaseGameState {
 		updateKeyTime(tpf, Consts.KEY_2);
 
 		// press left & right key to return to menu / restart
-		if (isPressed(Consts.KEY_1, timeToSwitchToMenu) && isPressed(Consts.KEY_2, timeToSwitchToMenu)) {
+		if (isPressed(Consts.KEY_1, timeToSwitchToMenu) //
+				&& isPressed(Consts.KEY_2, timeToSwitchToMenu)) {
 			manager.setActive(GameState.MENU);
 		}
 
 		// jump
 		if (isPressed(Consts.KEY_1, 1)) {
 			// only jump, if vehicle is on the floor
-			if (vehicleOnFloor) {
-				vehicle.ySpeed = -1.5f;
+			if (vehicleOnFloor && levelManager.isRunning()) {
+				vehicle.jump();
 			}
 		}
 
-		if (isPressed(Consts.KEY_2, 1)) {
+		if (levelManager.levelStarted == false && isPressed(Consts.KEY_2, 1)) {
 			levelManager.levelStarted = true;
+			SoundManager.get().playGameMusic();
 		}
 
 		// update entities
@@ -106,7 +108,9 @@ public class GSGame extends BaseGameState {
 	}
 
 	private void checkCollision() {
-
+		if (!levelManager.isRunning()) {
+			return;
+		}
 		// check collision vs obstacles
 		boolean collision = levelManager.checkCollision(vehicle);
 		if (collision) {
@@ -114,9 +118,10 @@ public class GSGame extends BaseGameState {
 		}
 
 		// floor check
-		if (vehicle.y + vehicle.height > floorHeight) {
-			vehicle.y = floorHeight - 1 - vehicle.height;
+		if (vehicle.y + vehicle.height >= floorHeight) {
+			vehicle.y = floorHeight - vehicle.height;
 			vehicleOnFloor = true;
+			vehicle.ySpeed = 0;
 		} else {
 			vehicleOnFloor = false;
 		}
@@ -140,6 +145,8 @@ public class GSGame extends BaseGameState {
 		drawFloor();
 		drawScore();
 		levelManager.draw(p);
+
+		Debug.get().draw(p);
 	}
 
 	private void drawVehicle() {
@@ -171,6 +178,7 @@ public class GSGame extends BaseGameState {
 		}
 
 		if (levelManager.levelFinished || levelManager.levelFailed) {
+			SoundManager.get().stop();
 			String info = "Level finished!";
 			if (levelManager.levelFailed) {
 				info = "Level failed!";
@@ -192,6 +200,8 @@ public class GSGame extends BaseGameState {
 		yPos += 20;
 		p.text("Fire: '" + Consts.KEY_2 + "'", p.width * 0.25f, yPos);
 
+		// FPS
+		p.text("FPS:" + (int) p.frameRate, 40, 80);
 	}
 
 	private void drawScore() {

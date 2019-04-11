@@ -12,8 +12,8 @@ public abstract class BaseEntity {
 	public float xSpeed;
 	public float ySpeed;
 
-	public float gravity = 3f;
-	public float maxSepeed = 10;
+	public float gravity = 0f;
+	public float maxSpeed = 0;
 	PApplet p;
 
 	public BaseEntity(PApplet p) {

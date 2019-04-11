@@ -5,6 +5,7 @@ import ch.coredump.twobutton.gamestate.GSGame;
 import ch.coredump.twobutton.gamestate.GSMenu;
 import ch.coredump.twobutton.gamestate.GameState;
 import ch.coredump.twobutton.gamestate.GameStateManager;
+import ch.coredump.twobutton.util.Consts;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.event.KeyEvent;
@@ -28,7 +29,7 @@ public class TwoButtonJam extends PApplet {
 	public void setup() {
 		SoundManager.init(this);
 
-		frameRate(30);
+		frameRate(Consts.FPS_TARGET);
 
 		manager = new GameStateManager();
 

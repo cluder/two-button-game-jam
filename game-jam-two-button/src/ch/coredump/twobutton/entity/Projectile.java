@@ -4,7 +4,7 @@ import processing.core.PApplet;
 
 public class Projectile extends BaseEntity {
 	public float length;
-	float lifetime = 3000;
+	float lifetime = 1500;
 	public boolean dead = false;
 
 	public Projectile(PApplet p, float x, float y) {
@@ -12,7 +12,7 @@ public class Projectile extends BaseEntity {
 		this.x = x;
 		this.y = y;
 		length = 10;
-		xSpeed = 3;
+		xSpeed = 0.2f;
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class Projectile extends BaseEntity {
 			return;
 		}
 		lifetime -= tpf;
-		x += xSpeed;
+		x += xSpeed * tpf;
 		if (lifetime <= 0) {
 			dead = true;
 		}

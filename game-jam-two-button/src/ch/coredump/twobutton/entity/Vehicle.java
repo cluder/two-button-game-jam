@@ -20,33 +20,37 @@ public class Vehicle extends BaseEntity {
 	long fireCoolDown = 0;
 
 	public List<Projectile> projectiles = new ArrayList<>();
+	private float jumpForce = 0;
 
 	public Vehicle(PApplet p) {
 		super(p);
 		height = 50;
 		length = 70;
 
+		gravity = 0.0012f;
+		jumpForce = 1.2f;
+
 		img = createImage();
 	}
 
 	private PGraphics createImage() {
-
 		img = p.createGraphics(length, height);
 		img.beginDraw();
 
 		final PImage pepe = p.loadImage("resources/pepe1.png");
 		pepe.resize(25, 20);
-		img.image(pepe, 15, 0);
+		img.image(pepe, 18, 0);
 
 		// body
 		img.rectMode(PApplet.CORNERS);
+
 		img.fill(255, collisionAlpha);
-		img.rect(10, 20, length - 10, height - 10);
+		img.rect(8, 20, length - 8, height - 7, 12);
 
 		// wheels
 		img.fill(200, collisionAlpha);
-		img.circle(20, height - 5, 15);
-		img.circle(length - 20, height - 5, 15);
+		img.circle(20, height - 8, 16);
+		img.circle(length - 20, height - 6, 12);
 
 		img.endDraw();
 
@@ -66,23 +70,22 @@ public class Vehicle extends BaseEntity {
 	public void update(long tpf) {
 		fireCoolDown -= tpf;
 
-		// test values
-		gravity = 1;
-		maxSepeed = 5;
+		maxSpeed = 5;
 
 		// apply gravity to y speed
-		ySpeed += gravity * tpf / 1000;
+		ySpeed += gravity * tpf;
 
-		// cgeck max speed (pos and neg)
-		if (ySpeed >= maxSepeed) {
-			ySpeed = maxSepeed;
+		maxSpeed = 1.2f;
+		// check max speed (pos and neg)
+		if (ySpeed >= maxSpeed) {
+			ySpeed = maxSpeed;
 		}
-		if (ySpeed <= -maxSepeed) {
-			ySpeed -= maxSepeed;
+		if (ySpeed <= -maxSpeed) {
+			ySpeed = maxSpeed;
 		}
 
 		y += ySpeed;
-		x += xSpeed;
+//		x += xSpeed;
 
 		for (Projectile pr : projectiles) {
 			pr.update(tpf);
@@ -111,5 +114,10 @@ public class Vehicle extends BaseEntity {
 
 		projectiles.add(new Projectile(p, x + length, y + height / 2));
 		projectiles.removeIf(x -> x.dead);
+	}
+
+	public void jump() {
+		ySpeed = -jumpForce;
+		System.out.println("jump");
 	}
 }
