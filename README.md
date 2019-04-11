@@ -3,4 +3,4 @@ TWO-BUTTON JAM, a week-long game jamming challenge (April 4 - 11, 2019) to creat
 
 https://itch.io/jam/2buttonjam
 
-![screenshot](/two-button-game-jam/screenshot.png?raw=true "Screenshot")
+![screenshot](/screenshot.png?raw=true "Screenshot")
