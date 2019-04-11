@@ -198,6 +198,7 @@ public class LevelManager {
 
 		t += tFar;
 		o = new Obstacle(p, x, y, t, 150, Type.RECT);
+		add(o);
 	}
 
 	private void add(Obstacle o) {
