@@ -7,3 +7,7 @@ https://itch.io/jam/2buttonjam
 
 ## Version 1.0
 Runnable jar [two_button_jam.jar](https://github.com/cluder/two-button-game-jam/releases/download/v1.0/two_button_jam.jar)
+
+
+## known problems
+* Jumping is not fully framrate independent, if you dont get 60 fps, you wont get the full jumping height.
