@@ -15,9 +15,8 @@ public class TwoButtonJam extends PApplet {
 	GameStateManager manager;
 
 	public static void main(String[] args) {
-		String[] newArgs = append(args, "--location=-1900,400");
-		newArgs = append(newArgs, TwoButtonJam.class.getName());
-		PApplet.main(newArgs);
+		args = append(args, TwoButtonJam.class.getName());
+		PApplet.main(args);
 	}
 
 	@Override
