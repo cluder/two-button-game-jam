@@ -24,8 +24,6 @@ public class GSGame extends BaseGameState {
 	long maxScore;
 	int scoreHeight = 50;
 
-	final float floorHeight = p.height * 0.6f;
-
 	Background bg;
 	Vehicle vehicle;
 	boolean vehicleOnFloor = false;
@@ -35,9 +33,9 @@ public class GSGame extends BaseGameState {
 	public GSGame(PApplet p, GameStateManager manager) {
 		super(p, manager, GameState.GAME);
 
-		bg = new Background(p, 50, 70, p.width - 50, (int) floorHeight - 70);
+		bg = new Background(p, 50, 70, p.width - 50, (int) calcFloorHeight() - 70);
 		vehicle = new Vehicle(p);
-		levelManager = new LevelManager(p, floorHeight);
+		levelManager = new LevelManager(p, calcFloorHeight());
 	}
 
 	@Override
@@ -58,10 +56,10 @@ public class GSGame extends BaseGameState {
 	private void reset() {
 		pressedKeys.clear();
 		score = 0;
-		vehicle.reset(p.width, (int) floorHeight);
+		vehicle.reset(p.width, (int) calcFloorHeight());
 
 		levelManager.init();
-		bg.init(50, 100, p.width - 50, (int) floorHeight - 70);
+		bg.init(50, 100, p.width - 50, (int) calcFloorHeight() - 70);
 		Debug.get().active = false;
 	}
 
@@ -118,13 +116,17 @@ public class GSGame extends BaseGameState {
 		}
 
 		// floor check
-		if (vehicle.y + vehicle.height >= floorHeight) {
-			vehicle.y = floorHeight - vehicle.height;
+		if (vehicle.y + vehicle.height >= calcFloorHeight()) {
+			vehicle.y = calcFloorHeight() - vehicle.height;
 			vehicleOnFloor = true;
 			vehicle.ySpeed = 0;
 		} else {
 			vehicleOnFloor = false;
 		}
+	}
+
+	private float calcFloorHeight() {
+		return p.height * Consts.FLOOR_HEIGHT;
 	}
 
 	@SuppressWarnings("unused")
@@ -156,7 +158,7 @@ public class GSGame extends BaseGameState {
 	private void drawFloor() {
 		p.rectMode(PApplet.CORNERS);
 		p.fill(155);
-		p.rect(30, floorHeight, p.width - 30, floorHeight + 50);
+		p.rect(30, calcFloorHeight(), p.width - 30, calcFloorHeight() + 50);
 	}
 
 	private void drawOverlay() {

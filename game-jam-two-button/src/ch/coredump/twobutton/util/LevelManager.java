@@ -47,128 +47,126 @@ public class LevelManager {
 
 		// starting x/y coords
 		float x = p.width - 40;
-		float y = floorHeight;
-
 		int t = 0;
 		int tFar = 1950;
 		int tNear = 300;
 
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 
 		t += tFar;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 20, Type.RECT);
-		add(o);
-
-		t += tFar;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
-		add(o);
-		t += tNear;
-		o = new Obstacle(p, x, y, t, 25, Type.RECT);
-		add(o);
-		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 20, Type.RECT);
 		add(o);
 
 		t += tFar;
-		o = new Obstacle(p, x, y, t, 20, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 40, Type.RECT);
+		o = new Obstacle(p, x, t, 25, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
-		add(o);
-
-		t += tFar;
-		o = new Obstacle(p, x, y, t, 28, Type.RECT);
-		add(o);
-		t += tNear;
-		t += tNear;
-		t += tNear;
-		t += tNear;
-		t += tNear;
-		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
-		add(o);
-		t += tNear;
-		o = new Obstacle(p, x, y, t, 50, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 
 		t += tFar;
-		o = new Obstacle(p, x, y, t, 5, Type.RECT);
+		o = new Obstacle(p, x, t, 20, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 40, Type.RECT);
 		add(o);
 		t += tNear;
-		t += tNear;
-		o = new Obstacle(p, x, y, t, 50, Type.RECT);
-		add(o);
-
-		t += tFar;
-		o = new Obstacle(p, x, y, t, 50, Type.RECT);
-		add(o);
-		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
-		add(o);
-		t += tNear;
-		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 
 		t += tFar;
-		o = new Obstacle(p, x, y, t, 50, Type.RECT);
-		add(o);
-		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
-		add(o);
-
-		t += tFar;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
-		add(o);
-		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 28, Type.RECT);
 		add(o);
 		t += tNear;
 		t += tNear;
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 30, Type.RECT);
+		t += tNear;
+		t += tNear;
+		t += tNear;
+		o = new Obstacle(p, x, t, 10, Type.RECT);
+		add(o);
+		t += tNear;
+		o = new Obstacle(p, x, t, 50, Type.RECT);
 		add(o);
 
 		t += tFar;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 5, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 20, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 20, Type.RECT);
+		t += tNear;
+		o = new Obstacle(p, x, t, 50, Type.RECT);
+		add(o);
+
+		t += tFar;
+		o = new Obstacle(p, x, t, 50, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
+		add(o);
+		t += tNear;
+		t += tNear;
+		o = new Obstacle(p, x, t, 10, Type.RECT);
+		add(o);
+
+		t += tFar;
+		o = new Obstacle(p, x, t, 50, Type.RECT);
+		add(o);
+		t += tNear;
+		o = new Obstacle(p, x, t, 10, Type.RECT);
+		add(o);
+
+		t += tFar;
+		o = new Obstacle(p, x, t, 10, Type.RECT);
+		add(o);
+		t += tNear;
+		o = new Obstacle(p, x, t, 10, Type.RECT);
+		add(o);
+		t += tNear;
+		t += tNear;
+		t += tNear;
+		o = new Obstacle(p, x, t, 30, Type.RECT);
+		add(o);
+
+		t += tFar;
+		o = new Obstacle(p, x, t, 10, Type.RECT);
+		add(o);
+		t += tNear;
+		o = new Obstacle(p, x, t, 20, Type.RECT);
+		add(o);
+		t += tNear;
+		o = new Obstacle(p, x, t, 20, Type.RECT);
+		add(o);
+		t += tNear;
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 		t += tNear;
 		t += tNear;
 
 		t += tFar;
 
-		o = new Obstacle(p, x, y, t, 50, Type.RECT);
+		o = new Obstacle(p, x, t, 50, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 20, Type.RECT);
+		o = new Obstacle(p, x, t, 20, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 150, Type.RECT);
+		o = new Obstacle(p, x, t, 150, Type.RECT);
 		add(o);
 
 		t += tNear;
@@ -176,28 +174,28 @@ public class LevelManager {
 		t += tNear;
 		t += tFar;
 
-		o = new Obstacle(p, x, y, t, 50, Type.RECT);
+		o = new Obstacle(p, x, t, 50, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 25, Type.RECT);
+		o = new Obstacle(p, x, t, 25, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 30, Type.RECT);
+		o = new Obstacle(p, x, t, 30, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 150, Type.RECT);
+		o = new Obstacle(p, x, t, 150, Type.RECT);
 		add(o);
 		t += tNear;
 		t += tNear;
 		t += tNear;
-		o = new Obstacle(p, x, y, t, 10, Type.RECT);
+		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 
 		t += tFar;
-		o = new Obstacle(p, x, y, t, 150, Type.RECT);
+		o = new Obstacle(p, x, t, 150, Type.RECT);
 		add(o);
 	}
 

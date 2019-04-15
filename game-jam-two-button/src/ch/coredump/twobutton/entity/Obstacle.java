@@ -17,12 +17,12 @@ public class Obstacle extends BaseEntity {
 	Type type = Type.RECT;
 	PGraphics img;
 
-	public Obstacle(PApplet p, float x, float y, long spawnTime, int height, Type t) {
+	public Obstacle(PApplet p, float x, long spawnTime, int height, Type t) {
 		super(p);
 		this.spawnTime = spawnTime;
 		this.height = height;
 		this.x = x;
-		this.y = y - height; // place on floor
+		this.y = calcY();
 		this.type = t;
 		// constant speed right to left
 		this.xSpeed = -Consts.MOVEMENT_SPEED;
@@ -60,6 +60,11 @@ public class Obstacle extends BaseEntity {
 
 	public void update(long tpf) {
 		x += xSpeed * tpf;
+		y = calcY();
+	}
+
+	private float calcY() {
+		return (p.height * Consts.FLOOR_HEIGHT) - height;
 	}
 
 	@Override
@@ -88,6 +93,8 @@ public class Obstacle extends BaseEntity {
 	}
 
 	private boolean checkPixels(int i, int j) {
+//		y = p.height * Consts.FLOOR_HEIGHT;
+
 		int oi = i - (int) x;
 		int oj = j - (int) y;
 

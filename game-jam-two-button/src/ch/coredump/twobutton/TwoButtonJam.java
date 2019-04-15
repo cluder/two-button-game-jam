@@ -26,6 +26,8 @@ public class TwoButtonJam extends PApplet {
 
 	@Override
 	public void setup() {
+		surface.setResizable(true);
+
 		SoundManager.init(this);
 
 		frameRate(Consts.FPS_TARGET);
