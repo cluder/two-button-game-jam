@@ -54,6 +54,7 @@ public class LevelManager {
 		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 
+		t += tNear;
 		t += tFar;
 		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
@@ -61,6 +62,7 @@ public class LevelManager {
 		o = new Obstacle(p, x, t, 20, Type.RECT);
 		add(o);
 
+		t += tNear;
 		t += tFar;
 		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
@@ -71,11 +73,12 @@ public class LevelManager {
 		o = new Obstacle(p, x, t, 10, Type.RECT);
 		add(o);
 
+		t += tNear;
 		t += tFar;
 		o = new Obstacle(p, x, t, 20, Type.RECT);
 		add(o);
 		t += tNear;
-		o = new Obstacle(p, x, t, 40, Type.RECT);
+		o = new Obstacle(p, x, t, 80, Type.RECT);
 		add(o);
 		t += tNear;
 		o = new Obstacle(p, x, t, 10, Type.RECT);

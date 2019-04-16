@@ -8,4 +8,5 @@ public class Consts {
 	public static final float FPS_TARGET = 60;
 	public static final int DEFAULT_FONT_SIZE = 15;
 	public static final float FLOOR_HEIGHT = 0.6f;
+	public static final long FIRE_COOLDOWN = 2000;
 }

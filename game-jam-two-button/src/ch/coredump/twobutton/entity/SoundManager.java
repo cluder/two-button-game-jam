@@ -10,6 +10,8 @@ public class SoundManager {
 
 	private static SoundManager instance;
 
+	private static boolean enabled = true;
+
 	PApplet p;
 	SoundFile menuMusic;
 	SoundFile gameMusic;
@@ -40,23 +42,35 @@ public class SoundManager {
 	}
 
 	public void playMenuMusic() {
+		if (!enabled) {
+			return;
+		}
 		amp = 0.5f;
 		stop();
 		menuMusic.loop(rate, amp);
 	}
 
 	public void playGameMusic() {
+		if (!enabled) {
+			return;
+		}
 		amp = 0.5f;
 		stop();
 		gameMusic.play(rate, amp);
 	}
 
 	public void stop() {
+		if (!enabled) {
+			return;
+		}
 		menuMusic.stop();
 		gameMusic.stop();
 	}
 
 	public void play(Effect effect) {
+		if (!enabled) {
+			return;
+		}
 		switch (effect) {
 		case IMPACT:
 			impact.play(rate, amp);
@@ -67,5 +81,9 @@ public class SoundManager {
 		default:
 			break;
 		}
+	}
+
+	public static void disable() {
+		enabled = false;
 	}
 }

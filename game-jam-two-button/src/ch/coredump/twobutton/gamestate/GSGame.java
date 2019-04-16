@@ -6,6 +6,8 @@ import java.util.HashMap;
 import ch.coredump.twobutton.entity.SoundManager;
 import ch.coredump.twobutton.entity.Vehicle;
 import ch.coredump.twobutton.util.Background;
+import ch.coredump.twobutton.util.Colors;
+import ch.coredump.twobutton.util.Colors.Col;
 import ch.coredump.twobutton.util.Consts;
 import ch.coredump.twobutton.util.Debug;
 import ch.coredump.twobutton.util.LevelManager;
@@ -139,7 +141,7 @@ public class GSGame extends BaseGameState {
 	 */
 	@Override
 	protected void doRender() {
-		p.background(0);
+		p.background(Colors.background());
 		bg.draw();
 
 		drawOverlay();
@@ -157,8 +159,9 @@ public class GSGame extends BaseGameState {
 
 	private void drawFloor() {
 		p.rectMode(PApplet.CORNERS);
-		p.fill(155);
-		p.rect(30, calcFloorHeight(), p.width - 30, calcFloorHeight() + 50);
+		p.stroke(200);
+		p.fill(Colors.floor());
+		p.rect(30, calcFloorHeight(), p.width - 30, calcFloorHeight() + 50, 10);
 	}
 
 	private void drawOverlay() {
@@ -167,7 +170,8 @@ public class GSGame extends BaseGameState {
 		p.noFill();
 		p.strokeJoin(PApplet.ROUND);
 		p.strokeWeight(1);
-		p.stroke(255, 255, 0, 150);
+		final Col overlay = Colors.overlay();
+		p.stroke(overlay.r, overlay.g, overlay.b, overlay.a);
 		p.rect(20, scoreHeight + 5, p.width - 20, p.height - 20);
 
 		// info message to start level
@@ -175,7 +179,7 @@ public class GSGame extends BaseGameState {
 			p.textAlign(PApplet.CENTER);
 			p.textSize(Consts.DEFAULT_FONT_SIZE);
 			p.noFill();
-			p.stroke(255, 255, 0, 255);
+			p.stroke(overlay.r, overlay.g, overlay.b, overlay.a);
 			p.text("press '" + Consts.KEY_2 + "' to start level", p.width * .5f, p.height * 0.35f);
 		}
 
@@ -202,8 +206,16 @@ public class GSGame extends BaseGameState {
 		yPos += 20;
 		p.text("Fire: '" + Consts.KEY_2 + "'", p.width * 0.25f, yPos);
 
+		// fire cooldown
+		float xStart = p.width * 0.45f;
+		p.rect(xStart, yPos, xStart + 60, yPos - 15);
+		p.fill(255);
+		float coolDown = PApplet.map(vehicle.fireCoolDown, 0, Consts.FIRE_COOLDOWN, 60, 0);
+		p.rect(xStart, yPos, xStart + coolDown, yPos - 15);
+
 		// FPS
 		p.text("FPS:" + (int) p.frameRate, 40, 80);
+
 	}
 
 	private void drawScore() {
@@ -214,11 +226,12 @@ public class GSGame extends BaseGameState {
 		df.setGroupingUsed(true);
 
 		p.strokeWeight(1);
-		p.stroke(255, 255, 0);
+		final Col overlay = Colors.overlay();
+		p.stroke(overlay.r, overlay.g, overlay.b, overlay.a);
 		p.line(padding, 50, p.width - padding, 50);
 
 		p.textSize(Consts.SCORE_FONT_SIZE);
-		p.fill(255, 200, 0, 255);
+		p.fill(overlay.r, overlay.g, overlay.b, overlay.a);
 
 		p.textAlign(PApplet.LEFT, PApplet.CENTER);
 		p.text("Distance (best:" + maxScore + ")", padding, padding);

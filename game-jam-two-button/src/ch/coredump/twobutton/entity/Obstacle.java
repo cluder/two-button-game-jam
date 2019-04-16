@@ -1,5 +1,7 @@
 package ch.coredump.twobutton.entity;
 
+import ch.coredump.twobutton.util.Colors;
+import ch.coredump.twobutton.util.Colors.Col;
 import ch.coredump.twobutton.util.Consts;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -33,7 +35,8 @@ public class Obstacle extends BaseEntity {
 		img = p.createGraphics(width, height);
 		img.beginDraw();
 
-		img.fill(251, 255, 0);
+		Col c = Colors.obstacle();
+		img.fill(c.r, c.g, c.b, c.a);
 		img.rectMode(PApplet.CORNER);
 		img.rect(0, 0, width, height, 15);
 
@@ -42,12 +45,14 @@ public class Obstacle extends BaseEntity {
 
 	@Override
 	public void draw(PApplet p) {
+		createImage();
 		if (dead) {
 			return;
 		}
 		switch (type) {
 		case ELLIPSE:
-			p.fill(255, 255, 0);
+			Col c = Colors.obstacle();
+			p.fill(c.r, c.g, c.b, c.a);
 //			p.rectMode(PApplet.CORNER);
 			p.ellipse(x, y, width, height);
 			break;
@@ -89,21 +94,16 @@ public class Obstacle extends BaseEntity {
 		}
 
 		return checkPixels(i, j);
-//		return true;
 	}
 
 	private boolean checkPixels(int i, int j) {
-//		y = p.height * Consts.FLOOR_HEIGHT;
-
 		int oi = i - (int) x;
 		int oj = j - (int) y;
 
 		if (oi < 0 || oi > width) {
-			System.out.println(oi + " oi not possible");
 			return false;
 		}
 		if (oj < 0 || oj > height) {
-			System.out.println(oj + " oj not possible");
 			return false;
 		}
 		final int pixel = img.get(oi, oj);
@@ -111,14 +111,9 @@ public class Obstacle extends BaseEntity {
 		int red = (pixel >> 16) & 255;
 //		int green = (pixel >> 8) & 255;
 //		int blue = pixel & 255;
-//		Debug.get().active = true;
-//		Debug.get().x = (int) (x + oi);
-//		Debug.get().y = (int) (y + oj);
 		if (red > 250) {
-//			System.out.println("oi:" + oi + " oj" + oj + " hit");
 			return true;
 		}
-//		System.out.println("oi:" + oi + " oj" + oj + " no hit");
 		return false;
 	}
 }

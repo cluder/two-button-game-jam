@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.coredump.twobutton.entity.SoundManager.Effect;
+import ch.coredump.twobutton.util.Consts;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -17,7 +18,7 @@ public class Vehicle extends BaseEntity {
 	public final int collisionAlpha = 250;
 	public PGraphics img;
 
-	long fireCoolDown = 0;
+	public long fireCoolDown = 0;
 
 	public List<Projectile> projectiles = new ArrayList<>();
 	private float jumpForce = 0;
@@ -69,6 +70,9 @@ public class Vehicle extends BaseEntity {
 	@Override
 	public void update(long tpf) {
 		fireCoolDown -= tpf;
+		if (fireCoolDown <= 0) {
+			fireCoolDown = 0;
+		}
 
 		maxSpeed = 5;
 
@@ -109,7 +113,7 @@ public class Vehicle extends BaseEntity {
 		if (fireCoolDown > 0) {
 			return;
 		}
-		fireCoolDown = 2000;
+		fireCoolDown = Consts.FIRE_COOLDOWN;
 		SoundManager.get().play(Effect.SHOT);
 
 		projectiles.add(new Projectile(p, x + length, y + height / 2));

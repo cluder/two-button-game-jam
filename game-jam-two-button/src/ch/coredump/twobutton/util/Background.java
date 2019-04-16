@@ -3,6 +3,7 @@ package ch.coredump.twobutton.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.coredump.twobutton.util.Colors.Col;
 import processing.core.PApplet;
 
 public class Background {
@@ -51,7 +52,8 @@ public class Background {
 
 	public void draw() {
 		for (Point point : points) {
-			p.stroke(255, 255, 0, 150);
+			final Col c = Colors.stars();
+			p.stroke(c.r, c.g, c.b, c.a);
 			p.point(point.x, point.y);
 		}
 	}
