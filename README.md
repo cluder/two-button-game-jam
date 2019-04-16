@@ -14,5 +14,7 @@ additional improvements after game jam:
 * gauge to visualize the fire cooldown
 * ability to resize the window (scaling after a resize is not fully working)
 
+![screenshot](/game-jam-two-button/doc/ani.gif?raw=true "Ani gif")
+
 ## known problems
 * Jumping is not fully framrate independent, if you dont get 60 fps, you wont get the full jumping height.
