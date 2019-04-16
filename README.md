@@ -1,7 +1,7 @@
 # two-button-game-jam
-TWO-BUTTON JAM, a week-long game jamming challenge (April 4 - 11, 2019) to create a prototype featuring only two buttons for input.
+A small game prototype for [TWO-BUTTON JAM, a week-long game jamming challenge (April 4 - 11, 2019)](https://itch.io/jam/2buttonjam).
+Made in Java using the [Processing Java library](https://processing.org/). 
 
-https://itch.io/jam/2buttonjam
 
 ![screenshot](/screenshot.png?raw=true "Screenshot")
 
